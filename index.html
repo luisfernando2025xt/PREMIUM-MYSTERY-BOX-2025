@@ -2,30 +2,32 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Mystery Box 2025</title>
+<title>Mystery Box 2025 - Premium</title>
 <style>
   body {
     background-color: #111;
     color: #fff;
-    font-family: Arial, sans-serif;
+    font-family: 'Arial', sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     padding: 20px;
   }
-  h1 { margin-bottom: 40px; }
 
-  /* Estilo para las instrucciones */
+  h1 { margin-bottom: 30px; font-size: 36px; color: gold; text-shadow: 0 0 5px #fff; }
+
+  /* Instructions box */
   .instructions {
     background-color: #222;
     color: #f1f1f1;
-    padding: 20px;
-    border-radius: 10px;
+    padding: 25px;
+    border-radius: 12px;
     margin-bottom: 50px;
     text-align: center;
     width: 80%;
-    max-width: 800px;
+    max-width: 900px;
     font-size: 18px;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
   }
 
   .main-boxes {
@@ -34,119 +36,204 @@
     justify-content: center;
     gap: 50px;
   }
+
   .box-container {
     position: relative;
     width: 150px;
     height: 150px;
-    text-align: center;
     cursor: pointer;
+    transition: transform 0.3s;
   }
+
+  .box-container:hover { transform: scale(1.05); }
 
   .main-box {
     width: 100%;
     height: 100%;
-    background-color: #444;
+    background: linear-gradient(145deg, #333, #555);
     border: 3px solid gold;
-    border-radius: 10px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-weight: bold;
-    font-size: 16px;
+    font-size: 18px;
+    color: gold;
+    text-shadow: 0 0 5px #fff;
     position: relative;
+    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+    transition: background 0.3s, transform 0.3s;
   }
 
-  .mini-box {
+  .main-box:hover {
+    background: linear-gradient(145deg, #555, #777);
+    transform: scale(1.05);
+  }
+
+  .mini-box, .mini-minibox {
     width: 40px;
     height: 40px;
-    background-color: #666;
+    background-color: #444;
     border: 2px solid silver;
-    border-radius: 5px;
+    border-radius: 8px;
     position: absolute;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 12px;
+    font-weight: bold;
+    color: white;
     cursor: pointer;
-    transition: transform 0.2s;
+    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
   }
 
-  .mini-box:hover {
-    transform: scale(1.2);
+  .mini-box:hover, .mini-minibox:hover {
+    transform: scale(1.3);
     background-color: gold;
     color: black;
+    box-shadow: 0 0 15px gold;
   }
-  
+
+  /* Modal styles */
+  .modal {
+    display: none;
+    position: fixed;
+    z-index: 100;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    backdrop-filter: blur(5px);
+    background-color: rgba(0,0,0,0.7);
+  }
+
+  .modal-content {
+    background-color: #222;
+    margin: 10% auto;
+    padding: 30px;
+    border: 2px solid gold;
+    border-radius: 15px;
+    width: 80%;
+    max-width: 500px;
+    color: #fff;
+    text-align: center;
+    font-size: 18px;
+    box-shadow: 0 0 30px gold;
+    animation: fadeIn 0.4s ease-in-out;
+  }
+
+  .close-btn {
+    color: gold;
+    font-size: 24px;
+    font-weight: bold;
+    position: absolute;
+    right: 25px;
+    top: 10px;
+    cursor: pointer;
+  }
+
+  .close-btn:hover { color: white; }
+
+  @keyframes fadeIn { from {opacity: 0;} to {opacity:1;} }
+
 </style>
 </head>
 <body>
 
 <h1>Mystery Box 2025</h1>
 
-<!-- Instrucciones -->
 <div class="instructions">
-  <h2>Instrucciones</h2>
-  <p>Haz clic en las cajas principales para ver las instrucciones de cada una. Luego, interactúa con las mini cajas alrededor para descubrir lo que esconden. ¡Que empiece la diversión!</p>
+  <h2>Instructions</h2>
+  <p>Click on each main box to see instructions for it. Then interact with the mini-boxes to reveal hidden treasures. Some mini-boxes even have their own mini-miniboxes! Enjoy the experience!</p>
 </div>
 
-<!-- Contenedor de las 6 cajas principales -->
 <div class="main-boxes">
-  <!-- Caja 1 -->
-  <div class="box-container" data-box="1">
-    <div class="main-box">Box 1</div>
-  </div>
-  <!-- Caja 2 -->
-  <div class="box-container" data-box="2">
-    <div class="main-box">Box 2</div>
-  </div>
-  <!-- Caja 3 -->
-  <div class="box-container" data-box="3">
-    <div class="main-box">Box 3</div>
-  </div>
-  <!-- Caja 4 -->
-  <div class="box-container" data-box="4">
-    <div class="main-box">Box 4</div>
-  </div>
-  <!-- Caja 5 -->
-  <div class="box-container" data-box="5">
-    <div class="main-box">Box 5</div>
-  </div>
-  <!-- Caja 6 -->
-  <div class="box-container" data-box="6">
-    <div class="main-box">Box 6</div>
+  <div class="box-container" data-box="1"><div class="main-box">Box 1</div></div>
+  <div class="box-container" data-box="2"><div class="main-box">Box 2</div></div>
+  <div class="box-container" data-box="3"><div class="main-box">Box 3</div></div>
+  <div class="box-container" data-box="4"><div class="main-box">Box 4</div></div>
+  <div class="box-container" data-box="5"><div class="main-box">Box 5</div></div>
+  <div class="box-container" data-box="6"><div class="main-box">Box 6</div></div>
+</div>
+
+<!-- Modal structure -->
+<div id="modal" class="modal">
+  <div class="modal-content">
+    <span class="close-btn">&times;</span>
+    <div id="modal-text"></div>
   </div>
 </div>
 
 <script>
-// Para cada caja principal, generamos 8 mini cajas alrededor
+const boxConfig = {
+  1: [9, 9, 8],
+  2: [9],
+  3: [5],
+  4: [1],
+  5: [1],
+  6: [2]
+};
+
 const boxes = document.querySelectorAll('.box-container');
+const modal = document.getElementById('modal');
+const modalText = document.getElementById('modal-text');
+const closeBtn = document.querySelector('.close-btn');
+
+function openModal(message) {
+  modalText.innerHTML = message;
+  modal.style.display = 'block';
+}
+
+closeBtn.onclick = () => modal.style.display = 'none';
+window.onclick = (event) => { if(event.target == modal) modal.style.display = 'none'; }
 
 boxes.forEach(container => {
   const mainBox = container.querySelector('.main-box');
   const boxNumber = container.dataset.box;
+  const miniBoxes = boxConfig[boxNumber];
+  const radius = 80;
+  const angleStep = (2 * Math.PI) / miniBoxes.length;
 
-  // Crear las mini cajas
-  for (let i = 0; i < 8; i++) {
+  miniBoxes.forEach((nestedCount, i) => {
     const miniBox = document.createElement('div');
     miniBox.className = 'mini-box';
     miniBox.textContent = i + 1;
-
-    // Posición alrededor del círculo
-    const angle = (i / 8) * (2 * Math.PI);
-    const radius = 80; // distancia desde el centro
-    miniBox.style.left = `${radius * Math.cos(angle) + 55}px`; // 55 para centrar
+    const angle = i * angleStep;
+    miniBox.style.left = `${radius * Math.cos(angle) + 55}px`;
     miniBox.style.top = `${radius * Math.sin(angle) + 55}px`;
 
-    miniBox.addEventListener('click', () => {
-      alert(`Mystery Box ${boxNumber} - Mini Box ${i + 1}`);
+    miniBox.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1}`);
     });
 
     container.appendChild(miniBox);
-  }
 
-  // Instrucciones al hacer click en la caja principal
+    // Nested mini-miniboxes only for Box 1
+    if (boxNumber == 1 && nestedCount > 0) {
+      const nestedAngleStep = (2 * Math.PI) / nestedCount;
+      const nestedRadius = 50;
+      for (let j = 0; j < nestedCount; j++) {
+        const miniMini = document.createElement('div');
+        miniMini.className = 'mini-minibox';
+        miniMini.textContent = j + 1;
+        miniMini.style.left = `${parseInt(miniBox.style.left) + nestedRadius * Math.cos(j * nestedAngleStep)}px`;
+        miniMini.style.top = `${parseInt(miniBox.style.top) + nestedRadius * Math.sin(j * nestedAngleStep)}px`;
+
+        miniMini.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1} - Mini-Minibox ${j + 1}`);
+        });
+
+        container.appendChild(miniMini);
+      }
+    }
+  });
+
   mainBox.addEventListener('click', () => {
-    alert(`Instrucciones para la Caja Misteriosa ${boxNumber}:\n1. Haz clic en las mini cajas para descubrir el contenido.\n2. Sigue las pistas para recibir tus premios.\n¡Disfruta de la experiencia!`);
+    openModal(`Instructions for Mystery Box ${boxNumber}:<br>Click the mini-boxes to reveal surprises!<br>Follow the clues and enjoy your rewards!`);
   });
 });
 </script>
