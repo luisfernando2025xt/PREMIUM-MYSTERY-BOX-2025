@@ -1,241 +1,431 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
 <meta charset="UTF-8">
 <title>Mystery Box 2025 - Premium</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <style>
-  body {
-    background-color: #111;
-    color: #fff;
-    font-family: 'Arial', sans-serif;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
+  :root{--bg:#0b0b0b;--card:#222;--accent:gold;--muted:#aaa}
+  html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#fff}
+  .wrap{padding:24px;display:flex;flex-direction:column;align-items:center;gap:20px}
+  h1{color:var(--accent);font-size:34px;text-shadow:0 0 6px #fff;margin:0}
+  .instructions{background:var(--card);padding:20px;border-radius:12px;max-width:950px;width:100%;box-shadow:0 0 30px rgba(255,215,0,0.06);font-size:16px}
+  .main-boxes{display:flex;flex-wrap:wrap;gap:48px;justify-content:center;width:100%}
+  .box-container{position:relative;width:150px;height:150px;cursor:pointer;transition:transform .25s}
+  .box-container:hover{transform:scale(1.03)}
+  .main-box{width:100%;height:100%;border-radius:12px;border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:var(--accent);background:linear-gradient(145deg,#333,#555);box-shadow:0 0 18px rgba(255,215,0,.25)}
+  .mini-box,.mini-minibox{width:40px;height:40px;border-radius:8px;background:#444;border:2px solid #ccc;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;position:absolute;cursor:pointer;transition:transform .2s,box-shadow .2s}
+  .mini-box:hover,.mini-minibox:hover{transform:scale(1.25);background:var(--accent);color:#000;box-shadow:0 0 14px var(--accent)}
+  /* modal / viewer */
+  .modal{display:none;position:fixed;left:0;top:0;width:100%;height:100%;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
+  .modal.show{display:flex}
+  .viewer{background:var(--card);max-width:1100px;width:100%;height:80vh;border-radius:14px;border:3px solid var(--accent);overflow:hidden;position:relative;box-shadow:0 0 40px rgba(255,215,0,.16)}
+  .viewer-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(90deg,#1b1b1b,#2b2b2b);border-bottom:1px solid rgba(255,215,0,.06)}
+  .viewer-title{font-weight:700;color:var(--accent)}
+  .close-btn{cursor:pointer;font-size:20px;color:var(--accent);padding:6px 10px;border-radius:8px}
+  .close-btn:hover{color:#fff;background:rgba(255,255,255,0.03)}
+  .viewer-body{height:calc(100% - 56px);display:flex;align-items:center;justify-content:center;padding:12px}
+  .viewer-body iframe{width:100%;height:100%;border:0;background:#000}
+  .viewer-body img{max-width:100%;max-height:100%;object-fit:contain}
+  .viewer-footer{position:absolute;bottom:8px;left:12px;color:var(--muted);font-size:13px}
+  .open-new{position:absolute;right:12px;bottom:8px;background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;color:var(--accent);text-decoration:none}
+  /* small screen adaptation */
+  @media(max-width:720px){
+    .viewer{height:86vh}
+    .main-box{font-size:16px}
   }
-
-  h1 { margin-bottom: 30px; font-size: 36px; color: gold; text-shadow: 0 0 5px #fff; }
-
-  /* Instructions box */
-  .instructions {
-    background-color: #222;
-    color: #f1f1f1;
-    padding: 25px;
-    border-radius: 12px;
-    margin-bottom: 50px;
-    text-align: center;
-    width: 80%;
-    max-width: 900px;
-    font-size: 18px;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
-  }
-
-  .main-boxes {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 50px;
-  }
-
-  .box-container {
-    position: relative;
-    width: 150px;
-    height: 150px;
-    cursor: pointer;
-    transition: transform 0.3s;
-  }
-
-  .box-container:hover { transform: scale(1.05); }
-
-  .main-box {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(145deg, #333, #555);
-    border: 3px solid gold;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: bold;
-    font-size: 18px;
-    color: gold;
-    text-shadow: 0 0 5px #fff;
-    position: relative;
-    box-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
-    transition: background 0.3s, transform 0.3s;
-  }
-
-  .main-box:hover {
-    background: linear-gradient(145deg, #555, #777);
-    transform: scale(1.05);
-  }
-
-  .mini-box, .mini-minibox {
-    width: 40px;
-    height: 40px;
-    background-color: #444;
-    border: 2px solid silver;
-    border-radius: 8px;
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 12px;
-    font-weight: bold;
-    color: white;
-    cursor: pointer;
-    transition: transform 0.3s, background 0.3s, box-shadow 0.3s;
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
-  }
-
-  .mini-box:hover, .mini-minibox:hover {
-    transform: scale(1.3);
-    background-color: gold;
-    color: black;
-    box-shadow: 0 0 15px gold;
-  }
-
-  /* Modal styles */
-  .modal {
-    display: none;
-    position: fixed;
-    z-index: 100;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    backdrop-filter: blur(5px);
-    background-color: rgba(0,0,0,0.7);
-  }
-
-  .modal-content {
-    background-color: #222;
-    margin: 10% auto;
-    padding: 30px;
-    border: 2px solid gold;
-    border-radius: 15px;
-    width: 80%;
-    max-width: 500px;
-    color: #fff;
-    text-align: center;
-    font-size: 18px;
-    box-shadow: 0 0 30px gold;
-    animation: fadeIn 0.4s ease-in-out;
-  }
-
-  .close-btn {
-    color: gold;
-    font-size: 24px;
-    font-weight: bold;
-    position: absolute;
-    right: 25px;
-    top: 10px;
-    cursor: pointer;
-  }
-
-  .close-btn:hover { color: white; }
-
-  @keyframes fadeIn { from {opacity: 0;} to {opacity:1;} }
 </style>
 </head>
 <body>
+<div class="wrap">
+  <h1>Mystery Box 2025</h1>
 
-<h1>Mystery Box 2025</h1>
+  <div class="instructions">
+    Haz clic en una caja principal para ver instrucciones. Después, haz clic en mini-boxes y mini-miniboxes para revelar contenidos dentro de la página. No habrá descargas automáticas: todo se ve en un visor embebido.
+  </div>
 
-<div class="instructions">
-  <h2>Instructions</h2>
-  <p>Click on each main box to see instructions for it. Then interact with the mini-boxes to reveal hidden treasures. Some mini-boxes even have their own mini-miniboxes! Enjoy the experience!</p>
+  <div class="main-boxes" id="mainBoxes">
+    <!-- Boxes 1..6 generadas por JS -->
+  </div>
 </div>
 
-<div class="main-boxes">
-  <div class="box-container" data-box="1"><div class="main-box">Box 1</div></div>
-  <div class="box-container" data-box="2"><div class="main-box">Box 2</div></div>
-  <div class="box-container" data-box="3"><div class="main-box">Box 3</div></div>
-  <div class="box-container" data-box="4"><div class="main-box">Box 4</div></div>
-  <div class="box-container" data-box="5"><div class="main-box">Box 5</div></div>
-  <div class="box-container" data-box="6"><div class="main-box">Box 6</div></div>
-</div>
-
-<!-- Modal structure -->
-<div id="modal" class="modal">
-  <div class="modal-content">
-    <span class="close-btn">&times;</span>
-    <div id="modal-text"></div>
+<!-- Viewer modal -->
+<div id="modal" class="modal" aria-hidden="true">
+  <div class="viewer" role="dialog" aria-modal="true">
+    <div class="viewer-header">
+      <div class="viewer-title" id="viewerTitle">Contenido</div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <a id="viewerOpenNew" class="open-new" href="#" target="_blank" rel="noopener" style="display:none">Abrir en nueva pestaña</a>
+        <div id="closeBtn" class="close-btn" title="Cerrar">✕</div>
+      </div>
+    </div>
+    <div class="viewer-body" id="viewerBody">
+      <!-- iframe or image inserted here -->
+    </div>
+    <div class="viewer-footer" id="viewerFooter"></div>
   </div>
 </div>
 
 <script>
-const boxConfig = {
-  1: [9, 9, 8],        // Box 1 → mantiene mini-miniboxes
-  2: Array(9).fill(0), // Box 2 → 9 mini-boxes
-  3: [0],              // Box 3 → 1 mini-box
-  4: [0],              // Box 4 → 1 mini-box
-  5: [0],              // Box 5 → 1 mini-box
-  6: Array(2).fill(0)  // Box 6 → 2 mini-boxes
-};
+/* ============================
+   DATA MAPPING (convert your Drive links to preview)
+   ============================ */
 
-const boxes = document.querySelectorAll('.box-container');
-const modal = document.getElementById('modal');
-const modalText = document.getElementById('modal-text');
-const closeBtn = document.querySelector('.close-btn');
-
-function openModal(message) {
-  modalText.innerHTML = message;
-  modal.style.display = 'block';
+/* Helper: converts many Drive link patterns to the preview iframe URL */
+function toDrivePreview(url){
+  try{
+    const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
+    if(idMatch && idMatch[1]) return `https://drive.google.com/file/d/${idMatch[1]}/preview`;
+    // fallback if user already gave a preview link
+    if(url.includes('/preview')) return url;
+    return url;
+  } catch(e){ return url; }
 }
 
-closeBtn.onclick = () => modal.style.display = 'none';
-window.onclick = (event) => { if(event.target == modal) modal.style.display = 'none'; }
+/* Your data structure derived from the list you gave.
+   boxesData[boxNumber] = array of mini-boxes
+   Each mini-box is either:
+     - an array of preview URLs (one per mini-minibox)
+     - or a single string URL (mini-box itself links directly)
+   For Boxes that require random selection, we provide an array but set "randomSingle:true" in meta.
+*/
+const boxesData = {
+  1: {
+    miniBoxes: [
+      // MINI-BOX1 -> 9 mini-miniboxes
+      [
+        "https://drive.google.com/file/d/1ed0FlblrQm7h9y3WGXa3CrGJshBRtlMC/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1U0Q4FHLY-Vecb5xXLyEquBR2ED-E3l2K/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1Mwhmu5XRz0G8s7kfKbPFZB-uRgoIXic5/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1XKEHCqaitGZKDbHv0pX8opIzuYF8X2Kl/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1lXjoVzh8PuWBt-EHEfrqUclsCLefxICv/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1P8p1jx1CdjkkBj0fWFNEWy8wQKT0osMM/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1RlGbocTeD6u2NEhJtKDL5N_mVhXpB5Ji/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1QiJ94N0LY1Qaqk6DA-uUHurw0orH0tFY/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1Z3LdQ3E-v-ivALkQPzBVex6R-gFzCRq2/view?usp=drivesdk"
+      ],
+      // MINI-BOX2 -> 9 mini-miniboxes
+      [
+        "https://drive.google.com/file/d/1fl_Zi3E67fKyKsOZmK6grX9ULjyyu7Hz/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1JZ6ycYCEQ8mW0kODCRW8zjeoOfblxSLr/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1m2lPRSPrW40U3m6Rq6NvUeDyPwVbpAcO/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1GoQNlzOzg3xWu1MDJnb51H1ZZfrOG5ek/view?usp=drivesdk",
+        "https://drive.google.com/file/d/117YBkE1_MYSkhavUDJbqJtvmKWH5Yhw1/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1EjTlWKiD6z5CU0LjH3At6bA9x0LvqnTK/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1fwlAztMMLBmE5L3hlg81OTL6ZD4kyrC4/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1o7o9K2OGj0_zJ6oVVgA4QEU-ANVGwd4o/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1nF1I-T1eJf8c7u2-_vl4mkybi9-fhXa2/view?usp=drivesdk"
+      ],
+      // MINI-BOX3 -> 8 mini-miniboxes
+      [
+        "https://drive.google.com/file/d/1ZsZ9c4vH2kSoNjMf7f081kMSsLI5GWIv/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1O-HdCs8-LQTg5SPo9Y-JOrr2ttyNhwJt/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1gAaAzUox0LncD_B9WwKFSYTVGgkeZKqC/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1CPwyOse8OtrIjFXlgWAVbXxsmMNoLxtQ/view?usp=drivesdk",
+        "https://drive.google.com/file/d/16pgxOLAGNWMIjmMi0nSTGRZoc31j8ukh/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1wQshix3B5FtNJwCUycSI_Ll1pHYOwJho/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1WD0FfZ9HceIIuPBClIZfxnyQLyeBkxS_/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1wr5w5gFDWhXVfnmftuegcmdUALj2a878/view?usp=drivesdk"
+      ],
+      // MINI-BOX4 -> 1 mini-minibox (single link)
+      [
+        "https://drive.google.com/file/d/1ewn-iuy67DypQRKYM5C1svcXYOVe6gDk/view?usp=drivesdk"
+      ]
+    ]
+  },
 
-boxes.forEach(container => {
-  const mainBox = container.querySelector('.main-box');
-  const boxNumber = container.dataset.box;
-  const miniBoxes = boxConfig[boxNumber];
-  const radius = 80;
-  const angleStep = miniBoxes.length > 1 ? (2 * Math.PI) / miniBoxes.length : 0;
+  2: {
+    miniBoxes: [
+      // one mini-box that contains 9 mini-miniboxes (all pdfs)
+      [
+        "https://drive.google.com/file/d/179oAz9qxQopvfxQsgTG8EQAarO0A4w5o/view?usp=drivesdk",
+        "https://drive.google.com/file/d/175ONUuwSZNAaOzb4QxJz2mg19Z4FHy0q/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1n9kso9ycxlIacKLA4NL9YSdOekd9NGJ3/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1zEP-EcrVnSjYFVitXCh5MIo3cXwUx48o/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1KV9GSCOWmmUWDF_l8Lm1GRSlanb_wLAH/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1qmxiDY-c70fng2QGtT1prUnJoXUOudhO/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1-ebmexKRkkHWZ9J7KYo3w-9YiqgWkGxL/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1fSQE5p5rYlG5M95FMRi4qwKnd4TBuALm/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1b64MJJudCY8LiWEMmG1q_04gOr5rIBxL/view?usp=drivesdk"
+      ]
+    ]
+  },
 
-  miniBoxes.forEach((nestedCount, i) => {
-    const miniBox = document.createElement('div');
-    miniBox.className = 'mini-box';
-    miniBox.textContent = i + 1;
-    const angle = i * angleStep;
-    miniBox.style.left = `${radius * Math.cos(angle) + 55}px`;
-    miniBox.style.top = `${radius * Math.sin(angle) + 55}px`;
+  3: {
+    // one mini-box that contains ONE mini-minibox chosen randomly among the list
+    miniBoxes: [
+      [
+        "https://drive.google.com/file/d/1rB6lR8oz4dyWW5si_m_tneEtrVMt3Nix/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1KugxWOlnQsJkhnikeS4p3r8uyHnBphBo/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1WxxfO6AwmZHz5zR6fI9pGftkq76Eszyj/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1vhZo5UX7R2PWA7KgdJyHl8bPQ-V943Gk/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1DkRIydV3Svqm1GYcXf0wbavEmaWm1sy8/view?usp=drivesdk"
+      ]
+    ],
+    randomSingle: true
+  },
 
-    miniBox.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1}`);
-    });
+  4: {
+    miniBoxes: [
+      [
+        "https://drive.google.com/file/d/1nCtMuv2GIENvjNRx_faSAgwkLH4i5DmX/view?usp=drivesdk",
+        "https://drive.google.com/file/d/13cglOJ-vRwIPIAyQGIBCUjShHwi2DTv6/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1vxjiBIQkyN_nim4ZAMNa1tJKd5nr3OGz/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1rQzJOa2dlU6cUjK-XMXAbZV803BNy6GH/view?usp=drivesdk",
+        "https://drive.google.com/file/d/1BEJYCvFvsuGcqNcUx_UDk_8qxYlxHlyg/view?usp=drivesdk"
+      ]
+    ],
+    randomSingle: true
+  },
 
-    container.appendChild(miniBox);
+  5: {
+    // one mini-box which opens a fixed URL but shows a random access code from a list
+    miniBoxes: [
+      "https://luisfernando2025xt.github.io/xmas-mystery-box/"
+    ],
+    codes: ["ABC123","XYZ789","LMN456","PL55MN88","QW11ER22","GH12JK34","RT56UV78","YZ90AB12","CD34EF56","MN78OP90"],
+    codeSingleRandom: true
+  },
 
-    // Nested mini-miniboxes only for Box 1
-    if (boxNumber == 1 && nestedCount > 0) {
-      const nestedAngleStep = (2 * Math.PI) / nestedCount;
-      const nestedRadius = 50;
-      for (let j = 0; j < nestedCount; j++) {
-        const miniMini = document.createElement('div');
-        miniMini.className = 'mini-minibox';
-        miniMini.textContent = j + 1;
-        miniMini.style.left = `${parseInt(miniBox.style.left) + nestedRadius * Math.cos(j * nestedAngleStep)}px`;
-        miniMini.style.top = `${parseInt(miniBox.style.top) + nestedRadius * Math.sin(j * nestedAngleStep)}px`;
+  6: {
+    miniBoxes: [
+      // two mini-boxes each with 1 link to a game
+      "https://luisfernando2025xt.github.io/xmas_game/",
+      "https://luisfernando2025xt.github.io/xmas_game_2/"
+    ]
+  }
+};
 
-        miniMini.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1} - Mini-Minibox ${j + 1}`);
-        });
-
-        container.appendChild(miniMini);
+/* Convert all stored Drive links to preview form for embedding
+   and also normalize miniBoxes to always be arrays for uniform handling.
+*/
+for(const boxNum in boxesData){
+  const box = boxesData[boxNum];
+  if(Array.isArray(box.miniBoxes)){
+    box.miniBoxes = box.miniBoxes.map(mb => {
+      if(Array.isArray(mb)){
+        return mb.map(toDrivePreview);
+      } else if(typeof mb === 'string'){
+        // if string looks like drive link convert, else keep
+        return toDrivePreview(mb);
       }
+      return mb;
+    });
+  } else {
+    // if structure not matching, try normalize
+    if(Array.isArray(box)){
+      boxesData[boxNum] = { miniBoxes: box.map(toDrivePreview) };
     }
-  });
+  }
+}
 
-  mainBox.addEventListener('click', () => {
-    openModal(`Instructions for Mystery Box ${boxNumber}:<br>Click the mini-boxes to reveal surprises!<br>Follow the clues and enjoy your rewards!`);
+/* ============================
+   UI Generation
+   ============================ */
+
+const mainBoxesEl = document.getElementById('mainBoxes');
+const modal = document.getElementById('modal');
+const viewerBody = document.getElementById('viewerBody');
+const viewerTitle = document.getElementById('viewerTitle');
+const viewerFooter = document.getElementById('viewerFooter');
+const viewerOpenNew = document.getElementById('viewerOpenNew');
+const closeBtn = document.getElementById('closeBtn');
+
+function createBoxes(){
+  for(let n=1;n<=6;n++){
+    const cont = document.createElement('div');
+    cont.className = 'box-container';
+    cont.dataset.box = n;
+    cont.style.width = '150px'; cont.style.height = '150px';
+    const main = document.createElement('div');
+    main.className = 'main-box';
+    main.textContent = `Box ${n}`;
+    cont.appendChild(main);
+    mainBoxesEl.appendChild(cont);
+
+    const boxData = boxesData[n];
+    // Determine miniBoxes for rendering
+    let miniBoxes = [];
+    if(boxData && Array.isArray(boxData.miniBoxes)){
+      miniBoxes = boxData.miniBoxes;
+    } else if(boxData && Array.isArray(boxData)){
+      miniBoxes = boxData;
+    }
+
+    // compute positions for miniBoxes around the main box
+    const radius = 80;
+    const angleStep = miniBoxes.length > 1 ? (2*Math.PI)/miniBoxes.length : 0;
+    miniBoxes.forEach((mb, i) => {
+      const mini = document.createElement('div');
+      mini.className = 'mini-box';
+      mini.textContent = i+1;
+      const angle = i*angleStep - Math.PI/2; // start from top
+      mini.style.left = `${radius*Math.cos(angle) + 55}px`;
+      mini.style.top = `${radius*Math.sin(angle) + 55}px`;
+      cont.appendChild(mini);
+
+      // behavior: if mb is an array => create mini-miniboxes; if mb is string => mini-box opens content
+      if(Array.isArray(mb)){
+        // if the box requests a single randomized selection (randomSingle on parent)
+        const parentBoxMeta = boxesData[n];
+        let selectedIndex = null;
+        if(parentBoxMeta && parentBoxMeta.randomSingle){
+          // pick one and remember in dataset to keep it for session
+          selectedIndex = Math.floor(Math.random()*mb.length);
+          mini.dataset.selectedIndex = selectedIndex;
+        }
+        // create mini-miniboxes: if randomSingle -> only create one; else create mb.length
+        const createIndices = (parentBoxMeta && parentBoxMeta.randomSingle) ? [selectedIndex] : [...Array(mb.length).keys()];
+        const nestedRadius = 45;
+        const nestedAngleStep = createIndices.length>1 ? (2*Math.PI)/createIndices.length : 0;
+        createIndices.forEach((idx, j) => {
+          const mm = document.createElement('div');
+          mm.className = 'mini-minibox';
+          mm.textContent = (idx+1);
+          const nangle = j*nestedAngleStep - Math.PI/2;
+          mm.style.left = `${parseInt(mini.style.left) + nestedRadius*Math.cos(nangle)}px`;
+          mm.style.top = `${parseInt(mini.style.top) + nestedRadius*Math.sin(nangle)}px`;
+          // store the URL to open
+          mm.dataset.url = mb[idx];
+          mm.dataset.box = n;
+          mm.dataset.miniIndex = i;
+          mm.dataset.miniMiniIndex = idx;
+          mm.addEventListener('click', onMiniMiniClick);
+          cont.appendChild(mm);
+        });
+      } else if(typeof mb === 'string'){
+        // mini-box itself is a link (Box5 & Box6 cases)
+        mini.dataset.url = mb; // already converted to preview if drive
+        mini.dataset.box = n;
+        mini.dataset.miniIndex = i;
+        mini.addEventListener('click', (e) => {
+          e.stopPropagation();
+          // special handling for Box5: show random code with link
+          const bdata = boxesData[n];
+          if(bdata && bdata.codeSingleRandom && bdata.codes){
+            // choose a code once per mini (store in dataset)
+            if(!mini.dataset.chosenCode){
+              const cidx = Math.floor(Math.random()*bdata.codes.length);
+              mini.dataset.chosenCode = bdata.codes[cidx];
+            }
+            openViewer({
+              title: `Box ${n} - Código de acceso`,
+              url: mini.dataset.url,
+              code: mini.dataset.chosenCode,
+              box: n
+            });
+          } else {
+            openViewer({title:`Box ${n}`, url: mini.dataset.url, box: n});
+          }
+        });
+      }
+
+      // main box click shows instructions
+      main.addEventListener('click', () => {
+        openInstructions(n);
+      });
+    });
+  }
+}
+
+/* ============================
+   Event handlers
+   ============================ */
+
+function onMiniMiniClick(e){
+  e.stopPropagation();
+  const target = e.currentTarget;
+  const url = target.dataset.url;
+  const box = target.dataset.box;
+  const miniIndex = target.dataset.miniIndex;
+  const miniMiniIndex = target.dataset.miniMiniIndex;
+
+  // handle randomSingle: if parent specified randomSingle but we didn't precompute, ensure we pick one
+  const parent = boxesData[box];
+  if(parent && parent.randomSingle && !target.dataset.url){
+    // fallback: choose random now
+    const mb = parent.miniBoxes[miniIndex];
+    const idx = Math.floor(Math.random()*mb.length);
+    target.dataset.url = mb[idx];
+  }
+
+  openViewer({
+    title: `Mystery Box ${box} - Mini ${parseInt(miniIndex)+1} - Item ${parseInt(miniMiniIndex)+1}`,
+    url: url,
+    box: box
   });
+}
+
+/* Opens the viewer modal with the content (iframe for drive preview; direct image fallback if link ends with image ext) */
+function openViewer({title='Contenido', url, code=null, box=null}){
+  viewerTitle.textContent = title;
+  viewerFooter.textContent = code ? `Código revelado: ${code}` : `Box ${box || ''}`;
+  viewerOpenNew.style.display = 'none';
+  viewerOpenNew.href = '#';
+
+  // clean body
+  viewerBody.innerHTML = '';
+
+  if(!url){
+    // if no url provided, show an error
+    viewerBody.innerHTML = `<div style="color:var(--muted);padding:20px;text-align:center">Contenido no disponible</div>`;
+    modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
+    return;
+  }
+
+  // if it's a GitHub or normal web link (not Drive preview) we open in iframe but also provide "open in new tab" button
+  const isDrive = url.includes('drive.google.com/file/d/');
+  const isHttp = url.startsWith('http');
+  const imageExt = url.match(/\.(png|jpg|jpeg|gif|webp)(\?|$)/i);
+  const pdfExt = url.match(/\.pdf(\?|$)/i);
+
+  // Viewer strategy:
+  // - Drive preview: embed in iframe
+  // - Direct image: show <img>
+  // - Otherwise embed in iframe and show "abrir en nueva pestaña" as fallback
+  if(imageExt && !isDrive){
+    const img = document.createElement('img'); img.src = url; img.alt = title;
+    viewerBody.appendChild(img);
+  } else {
+    const iframe = document.createElement('iframe');
+    iframe.src = isDrive ? url : url;
+    iframe.allow = 'autoplay; encrypted-media; fullscreen';
+    iframe.loading = 'lazy';
+    viewerBody.appendChild(iframe);
+
+    // show open in new tab so user can inspect if embed blocked
+    viewerOpenNew.style.display = 'inline-block';
+    viewerOpenNew.href = url;
+  }
+
+  // show modal
+  modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
+}
+
+/* Close modal */
+closeBtn.addEventListener('click', () => {
+  modal.classList.remove('show'); modal.setAttribute('aria-hidden','true');
+  viewerBody.innerHTML = '';
 });
-</script>
 
+/* Clicking outside viewer closes modal */
+modal.addEventListener('click', (ev) => {
+  if(ev.target === modal){ modal.classList.remove('show'); viewerBody.innerHTML=''; modal.setAttribute('aria-hidden','true'); }
+});
+
+/* Show instructions for a main box */
+function openInstructions(boxNumber){
+  const txt = `Instrucciones para Mystery Box ${boxNumber}: Haz clic en los mini-boxes para revelar los tesoros.`;
+  // Reuse viewer to show instructions quickly as HTML (no embed)
+  viewerTitle.textContent = `Box ${boxNumber} — Instrucciones`;
+  viewerFooter.textContent = '';
+  viewerOpenNew.style.display = 'none';
+  viewerBody.innerHTML = `<div style="padding:24px;color:var(--muted);line-height:1.4">${txt}</div>`;
+  modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
+}
+
+/* Initialize UI */
+createBoxes();
+</script>
 </body>
 </html>
