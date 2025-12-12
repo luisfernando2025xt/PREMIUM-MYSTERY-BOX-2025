@@ -1,98 +1,245 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Mystery Box 2025 - Premium</title>
-<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<!-- Fuentes premium -->
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+
 <style>
-  :root{--bg:#0b0b0b;--card:#222;--accent:gold;--muted:#aaa}
-  html,body{height:100%;margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:#fff}
-  .wrap{padding:24px;display:flex;flex-direction:column;align-items:center;gap:60px}
-  h1{color:var(--accent);font-size:34px;text-shadow:0 0 6px #fff;margin:0}
-  .instructions{background:var(--card);padding:20px;border-radius:12px;max-width:950px;width:100%;box-shadow:0 0 30px rgba(255,215,0,0.06);font-size:16px}
-  .main-boxes{display:flex;flex-wrap:wrap;gap:48px;justify-content:center;width:100%}
-  .box-container{position:relative;width:150px;height:150px;cursor:pointer;transition:transform .25s}
-  .box-container:hover{transform:scale(1.03)}
-  .main-box{width:100%;height:100%;border-radius:12px;border:3px solid var(--accent);display:flex;align-items:center;justify-content:center;font-weight:bold;font-size:18px;color:var(--accent);background:linear-gradient(145deg,#333,#555);box-shadow:0 0 18px rgba(255,215,0,.25)}
-  .mini-box,.mini-minibox{width:40px;height:40px;border-radius:8px;background:#444;border:2px solid #ccc;display:flex;align-items:center;justify-content:center;font-weight:bold;color:#fff;position:absolute;cursor:pointer;transition:transform .2s,box-shadow .2s}
-  .mini-box:hover,.mini-minibox:hover{transform:scale(1.25);background:var(--accent);color:#000;box-shadow:0 0 14px var(--accent)}
-  /* modal / viewer */
-  .modal{display:none;position:fixed;left:0;top:0;width:100%;height:100%;z-index:9999;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:20px}
+  :root{
+    --bg:#070607;
+    --card:#151515;
+    --panel:#1c1c1c;
+    --accent:linear-gradient(90deg,#ffdd55,#f2b705);
+    --gold:#f0c84b;
+    --muted:#bdbdbd;
+    --glass: rgba(255,255,255,0.03);
+  }
+
+  /* Reset / base */
+  *{box-sizing:border-box}
+  html,body{height:100%;margin:0;background:var(--bg);color:#fff;font-family:"Poppins",Arial,Helvetica,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:inherit}
+
+  /* Layout */
+  .wrap{max-width:1300px;margin:28px auto;padding:28px;display:flex;flex-direction:column;align-items:center;gap:84px}
+  header{width:100%;display:flex;flex-direction:column;align-items:center;gap:18px}
+
+  /* Hero title: Playfair for luxurious vibe, huge size */
+  h1{
+    margin:0;
+    font-family:"Playfair Display","Poppins",serif;
+    font-weight:700;
+    font-size:72px;
+    line-height:0.95;
+    letter-spacing:2px;
+    color:var(--gold);
+    text-shadow:0 6px 24px rgba(240,200,75,0.08), 0 2px 8px rgba(0,0,0,0.6);
+    transform:translateZ(0);
+  }
+
+  /* Subheading / instruction card */
+  .instructions{
+    width:100%;
+    max-width:980px;
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border-radius:18px;
+    padding:34px;
+    border:1px solid rgba(240,200,75,0.06);
+    box-shadow:0 10px 40px rgba(0,0,0,0.6);
+    font-size:20px;
+    line-height:1.6;
+    color: #e9e6e0;
+    text-align:center;
+    letter-spacing:0.3px;
+  }
+
+  /* Boxes grid */
+  .main-boxes{
+    width:100%;
+    display:flex;
+    flex-wrap:wrap;
+    gap:56px;
+    justify-content:center;
+    align-items:center;
+  }
+
+  .box-container{
+    position:relative;
+    width:190px;
+    height:190px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:transform .28s cubic-bezier(.2,.9,.2,1), box-shadow .28s;
+  }
+  .box-container:hover{transform:translateY(-6px) scale(1.02);}
+
+  .main-box{
+    width:100%;
+    height:100%;
+    border-radius:16px;
+    border:3px solid rgba(240,200,75,0.95);
+    background: linear-gradient(145deg,#2a2a2a,#151515);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    box-shadow: 0 25px 60px rgba(0,0,0,0.6), 0 4px 20px rgba(240,200,75,0.06) inset;
+    color:var(--gold);
+    font-weight:700;
+    font-family:"Poppins",sans-serif;
+    font-size:26px;
+    letter-spacing:1px;
+    text-transform:uppercase;
+  }
+
+  /* Mini boxes are larger for premium feel */
+  .mini-box, .mini-minibox{
+    width:56px;
+    height:56px;
+    border-radius:10px;
+    background: linear-gradient(180deg,#2b2b2b,#111);
+    border:2px solid rgba(255,255,255,0.06);
+    color:#fff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    font-size:18px;
+    cursor:pointer;
+    position:absolute;
+    transition:transform .18s ease, box-shadow .18s ease, background .18s ease;
+    box-shadow: 0 6px 22px rgba(0,0,0,0.65);
+  }
+  .mini-box:hover, .mini-minibox:hover{
+    transform:scale(1.2) translateY(-4px);
+    background:linear-gradient(90deg,#fff4c7,#f1c84a);
+    color:#111;
+    box-shadow: 0 18px 40px rgba(241,200,80,0.18);
+  }
+
+  /* viewer / modal */
+  .modal{display:none;position:fixed;inset:0;z-index:9999;background:linear-gradient(180deg, rgba(0,0,0,0.72), rgba(0,0,0,0.82));backdrop-filter: blur(6px);align-items:center;justify-content:center;padding:28px}
   .modal.show{display:flex}
-  .viewer{background:var(--card);max-width:1100px;width:100%;height:80vh;border-radius:14px;border:3px solid var(--accent);overflow:hidden;position:relative;box-shadow:0 0 40px rgba(255,215,0,.16)}
-  .viewer-header{display:flex;align-items:center;justify-content:space-between;padding:12px 18px;background:linear-gradient(90deg,#1b1b1b,#2b2b2b);border-bottom:1px solid rgba(255,215,0,.06)}
-  .viewer-title{font-weight:700;color:var(--accent)}
-  .close-btn{cursor:pointer;font-size:20px;color:var(--accent);padding:6px 10px;border-radius:8px}
-  .close-btn:hover{color:#fff;background:rgba(255,255,255,0.03)}
-  .viewer-body{height:calc(100% - 56px);display:flex;align-items:center;justify-content:center;padding:12px}
+  .viewer{
+    width:100%;
+    max-width:1180px;
+    height:84vh;
+    background:linear-gradient(180deg,var(--panel), #111);
+    border-radius:16px;
+    border:2px solid rgba(240,200,75,0.08);
+    overflow:hidden;
+    position:relative;
+    box-shadow:0 30px 120px rgba(0,0,0,0.7);
+    display:flex;
+    flex-direction:column;
+  }
+
+  .viewer-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:18px 22px;
+    gap:12px;
+    background:linear-gradient(90deg,#0f0f0f, #141414);
+    border-bottom:1px solid rgba(255,255,255,0.02);
+  }
+  .viewer-title{
+    font-family:"Playfair Display","Poppins",serif;
+    font-size:20px;
+    letter-spacing:0.8px;
+    color:var(--gold);
+    font-weight:700;
+  }
+  .viewer-controls{display:flex;gap:10px;align-items:center}
+  .open-new{background:var(--glass);padding:8px 12px;border-radius:10px;color:var(--gold);text-decoration:none;font-weight:600;border:1px solid rgba(255,255,255,0.03)}
+  .close-btn{cursor:pointer;font-size:22px;color:var(--gold);padding:8px 12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);background:transparent}
+
+  .viewer-body{flex:1;display:flex;align-items:center;justify-content:center;padding:12px}
   .viewer-body iframe{width:100%;height:100%;border:0;background:#000}
-  .viewer-body img{max-width:100%;max-height:100%;object-fit:contain}
-  .viewer-footer{position:absolute;bottom:8px;left:12px;color:var(--muted);font-size:13px}
-  .open-new{position:absolute;right:12px;bottom:8px;background:rgba(255,255,255,0.04);padding:6px 10px;border-radius:8px;color:var(--accent);text-decoration:none}
-  /* small screen adaptation */
-  @media(max-width:720px){
+  .viewer-body img{max-width:100%;max-height:100%;object-fit:contain;border-radius:6px}
+
+  .viewer-footer{padding:12px 18px;color:var(--muted);font-size:14px;border-top:1px solid rgba(255,255,255,0.02);display:flex;justify-content:space-between;align-items:center}
+
+  /* responsive */
+  @media (max-width:980px){
+    h1{font-size:48px}
+    .wrap{gap:40px;padding:18px}
+    .main-box{font-size:20px}
+    .mini-box,.mini-minibox{width:48px;height:48px;font-size:16px}
     .viewer{height:86vh}
-    .main-box{font-size:16px}
+  }
+  @media (max-width:640px){
+    h1{font-size:36px}
+    .box-container{width:140px;height:140px}
+    .mini-box,.mini-minibox{width:44px;height:44px;font-size:14px}
+  }
+
+  /* subtle entrance */
+  .box-appear{animation:boxPop .6s cubic-bezier(.2,.9,.2,1) both}
+  @keyframes boxPop{
+    from{opacity:0;transform:translateY(12px) scale(.98)}
+    to{opacity:1;transform:translateY(0) scale(1)}
   }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>Mystery Box 2025</h1>
-
-  <div class="instructions">
-    This content is optimized to be viewed only in darkness. Please enter a completely dark or very dim room before opening any part of this Mystery Box, otherwise you won’t be able to experience it correctly.
-  </div>
-
-  <div class="main-boxes" id="mainBoxes">
-    <!-- Boxes 1..6 generadas por JS -->
-  </div>
-</div>
-
-<!-- Viewer modal -->
-<div id="modal" class="modal" aria-hidden="true">
-  <div class="viewer" role="dialog" aria-modal="true">
-    <div class="viewer-header">
-      <div class="viewer-title" id="viewerTitle">Contenido</div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <a id="viewerOpenNew" class="open-new" href="#" target="_blank" rel="noopener" style="display:none">Abrir en nueva pestaña</a>
-        <div id="closeBtn" class="close-btn" title="Cerrar">✕</div>
+  <div class="wrap">
+    <header>
+      <h1>Mystery Box 2025</h1>
+      <div class="instructions" id="mainInstructions">
+        This content is optimized to be viewed only in darkness. Please enter a completely dark or very dim room before opening any part of this Mystery Box, otherwise you won’t be able to experience it correctly.
       </div>
-    </div>
-    <div class="viewer-body" id="viewerBody">
-      <!-- iframe or image inserted here -->
-    </div>
-    <div class="viewer-footer" id="viewerFooter"></div>
+    </header>
+
+    <div class="main-boxes" id="mainBoxes"></div>
   </div>
-</div>
+
+  <!-- Viewer modal -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="viewer" role="dialog" aria-modal="true">
+      <div class="viewer-header">
+        <div class="viewer-title" id="viewerTitle">Contenido</div>
+        <div class="viewer-controls">
+          <a id="viewerOpenNew" class="open-new" href="#" target="_blank" rel="noopener" style="display:none">Abrir en nueva pestaña</a>
+          <button id="closeBtn" class="close-btn" title="Cerrar">✕</button>
+        </div>
+      </div>
+      <div class="viewer-body" id="viewerBody"></div>
+      <div class="viewer-footer" id="viewerFooter"></div>
+    </div>
+  </div>
 
 <script>
-/* ============================
-   DATA MAPPING (convert your Drive links to preview)
-   ============================ */
-
-/* Helper: converts many Drive link patterns to the preview iframe URL */
+/* ---------------------------
+   Helper: normalize Drive to preview
+   --------------------------- */
 function toDrivePreview(url){
   try{
-    const idMatch = url.match(/\/d\/([a-zA-Z0-9_-]+)/);
-    if(idMatch && idMatch[1]) return `https://drive.google.com/file/d/${idMatch[1]}/preview`;
-    // fallback if user already gave a preview link
+    if(!url || typeof url !== 'string') return url;
+    // common pattern /d/FILEID/
+    const m = url.match(/\/d\/([a-zA-Z0-9_-]{10,})/);
+    if(m && m[1]) return `https://drive.google.com/file/d/${m[1]}/preview`;
+    // already preview
     if(url.includes('/preview')) return url;
+    // uc?export maybe
+    if(url.includes('uc?export=view') || url.includes('drive.googleusercontent.com')) return url;
     return url;
-  } catch(e){ return url; }
+  } catch(e){
+    return url;
+  }
 }
 
-/* Your data structure derived from the list you gave.
-   boxesData[boxNumber] = array of mini-boxes
-   Each mini-box is either:
-     - an array of preview URLs (one per mini-minibox)
-     - or a single string URL (mini-box itself links directly)
-   For Boxes that require random selection, we provide an array but set "randomSingle:true" in meta.
-*/
+/* ---------------------------
+   Data structure (your links)
+   --------------------------- */
+/* NOTE: links remain exactly as you provided; conversion to /preview happens below */
 const boxesData = {
   1: {
     miniBoxes: [
-      // MINI-BOX1 -> 9 mini-miniboxes
       [
         "https://drive.google.com/file/d/1ed0FlblrQm7h9y3WGXa3CrGJshBRtlMC/view?usp=drivesdk",
         "https://drive.google.com/file/d/1U0Q4FHLY-Vecb5xXLyEquBR2ED-E3l2K/view?usp=drivesdk",
@@ -104,7 +251,6 @@ const boxesData = {
         "https://drive.google.com/file/d/1QiJ94N0LY1Qaqk6DA-uUHurw0orH0tFY/view?usp=drivesdk",
         "https://drive.google.com/file/d/1Z3LdQ3E-v-ivALkQPzBVex6R-gFzCRq2/view?usp=drivesdk"
       ],
-      // MINI-BOX2 -> 9 mini-miniboxes
       [
         "https://drive.google.com/file/d/1fl_Zi3E67fKyKsOZmK6grX9ULjyyu7Hz/view?usp=drivesdk",
         "https://drive.google.com/file/d/1JZ6ycYCEQ8mW0kODCRW8zjeoOfblxSLr/view?usp=drivesdk",
@@ -116,7 +262,6 @@ const boxesData = {
         "https://drive.google.com/file/d/1o7o9K2OGj0_zJ6oVVgA4QEU-ANVGwd4o/view?usp=drivesdk",
         "https://drive.google.com/file/d/1nF1I-T1eJf8c7u2-_vl4mkybi9-fhXa2/view?usp=drivesdk"
       ],
-      // MINI-BOX3 -> 8 mini-miniboxes
       [
         "https://drive.google.com/file/d/1ZsZ9c4vH2kSoNjMf7f081kMSsLI5GWIv/view?usp=drivesdk",
         "https://drive.google.com/file/d/1O-HdCs8-LQTg5SPo9Y-JOrr2ttyNhwJt/view?usp=drivesdk",
@@ -127,7 +272,6 @@ const boxesData = {
         "https://drive.google.com/file/d/1WD0FfZ9HceIIuPBClIZfxnyQLyeBkxS_/view?usp=drivesdk",
         "https://drive.google.com/file/d/1wr5w5gFDWhXVfnmftuegcmdUALj2a878/view?usp=drivesdk"
       ],
-      // MINI-BOX4 -> 1 mini-minibox (single link)
       [
         "https://drive.google.com/file/d/1ewn-iuy67DypQRKYM5C1svcXYOVe6gDk/view?usp=drivesdk"
       ]
@@ -136,7 +280,6 @@ const boxesData = {
 
   2: {
     miniBoxes: [
-      // one mini-box that contains 9 mini-miniboxes (all pdfs)
       [
         "https://drive.google.com/file/d/179oAz9qxQopvfxQsgTG8EQAarO0A4w5o/view?usp=drivesdk",
         "https://drive.google.com/file/d/175ONUuwSZNAaOzb4QxJz2mg19Z4FHy0q/view?usp=drivesdk",
@@ -152,7 +295,6 @@ const boxesData = {
   },
 
   3: {
-    // one mini-box that contains ONE mini-minibox chosen randomly among the list
     miniBoxes: [
       [
         "https://drive.google.com/file/d/1rB6lR8oz4dyWW5si_m_tneEtrVMt3Nix/view?usp=drivesdk",
@@ -179,7 +321,6 @@ const boxesData = {
   },
 
   5: {
-    // one mini-box which opens a fixed URL but shows a random access code from a list
     miniBoxes: [
       "https://luisfernando2025xt.github.io/xmas-mystery-box/"
     ],
@@ -189,40 +330,29 @@ const boxesData = {
 
   6: {
     miniBoxes: [
-      // two mini-boxes each with 1 link to a game
       "https://luisfernando2025xt.github.io/xmas_game/",
       "https://luisfernando2025xt.github.io/xmas_game_2/"
     ]
   }
 };
 
-/* Convert all stored Drive links to preview form for embedding
-   and also normalize miniBoxes to always be arrays for uniform handling.
-*/
-for(const boxNum in boxesData){
-  const box = boxesData[boxNum];
-  if(Array.isArray(box.miniBoxes)){
+/* ---------------------------
+   Normalize & convert links to preview; ensure arrays
+   --------------------------- */
+for (const k in boxesData){
+  const box = boxesData[k];
+  if (Array.isArray(box.miniBoxes)){
     box.miniBoxes = box.miniBoxes.map(mb => {
-      if(Array.isArray(mb)){
-        return mb.map(toDrivePreview);
-      } else if(typeof mb === 'string'){
-        // if string looks like drive link convert, else keep
-        return toDrivePreview(mb);
-      }
+      if (Array.isArray(mb)) return mb.map(toDrivePreview);
+      if (typeof mb === 'string') return toDrivePreview(mb);
       return mb;
     });
-  } else {
-    // if structure not matching, try normalize
-    if(Array.isArray(box)){
-      boxesData[boxNum] = { miniBoxes: box.map(toDrivePreview) };
-    }
   }
 }
 
-/* ============================
-   UI Generation
-   ============================ */
-
+/* ---------------------------
+   UI generation with persistence for random choices (localStorage)
+   --------------------------- */
 const mainBoxesEl = document.getElementById('mainBoxes');
 const modal = document.getElementById('modal');
 const viewerBody = document.getElementById('viewerBody');
@@ -231,12 +361,13 @@ const viewerFooter = document.getElementById('viewerFooter');
 const viewerOpenNew = document.getElementById('viewerOpenNew');
 const closeBtn = document.getElementById('closeBtn');
 
+function persistKey(box, mini, key){ return `mystery_box_${box}_mini_${mini}_${key}`; }
+
 function createBoxes(){
   for(let n=1;n<=6;n++){
     const cont = document.createElement('div');
-    cont.className = 'box-container';
+    cont.className = 'box-container box-appear';
     cont.dataset.box = n;
-    cont.style.width = '150px'; cont.style.height = '150px';
     const main = document.createElement('div');
     main.className = 'main-box';
     main.textContent = `Box ${n}`;
@@ -244,83 +375,79 @@ function createBoxes(){
     mainBoxesEl.appendChild(cont);
 
     const boxData = boxesData[n];
-    // Determine miniBoxes for rendering
     let miniBoxes = [];
-    if(boxData && Array.isArray(boxData.miniBoxes)){
-      miniBoxes = boxData.miniBoxes;
-    } else if(boxData && Array.isArray(boxData)){
-      miniBoxes = boxData;
-    }
-
-    // compute positions for miniBoxes around the main box
-    const radius = 80;
+    if(boxData && Array.isArray(boxData.miniBoxes)) miniBoxes = boxData.miniBoxes;
+    const radius = 96;
     const angleStep = miniBoxes.length > 1 ? (2*Math.PI)/miniBoxes.length : 0;
+
     miniBoxes.forEach((mb, i) => {
       const mini = document.createElement('div');
       mini.className = 'mini-box';
       mini.textContent = i+1;
-      const angle = i*angleStep - Math.PI/2; // start from top
-      mini.style.left = `${radius*Math.cos(angle) + 55}px`;
-      mini.style.top = `${radius*Math.sin(angle) + 55}px`;
+      const angle = i*angleStep - Math.PI/2;
+      mini.style.left = `${Math.round(radius*Math.cos(angle) + 70)}px`;
+      mini.style.top = `${Math.round(radius*Math.sin(angle) + 70)}px`;
       cont.appendChild(mini);
 
-      // behavior: if mb is an array => create mini-miniboxes; if mb is string => mini-box opens content
       if(Array.isArray(mb)){
-        // if the box requests a single randomized selection (randomSingle on parent)
-        const parentBoxMeta = boxesData[n];
+        // support persistent randomSingle
+        const parentMeta = boxesData[n];
         let selectedIndex = null;
-        if(parentBoxMeta && parentBoxMeta.randomSingle){
-          // pick one and remember in dataset to keep it for session
-          selectedIndex = Math.floor(Math.random()*mb.length);
+
+        if(parentMeta && parentMeta.randomSingle){
+          const storageKey = persistKey(n, i, 'selectedIndex');
+          const stored = localStorage.getItem(storageKey);
+          if(stored !== null){
+            selectedIndex = parseInt(stored,10);
+          } else {
+            selectedIndex = Math.floor(Math.random() * mb.length);
+            localStorage.setItem(storageKey, String(selectedIndex));
+          }
           mini.dataset.selectedIndex = selectedIndex;
         }
-        // create mini-miniboxes: if randomSingle -> only create one; else create mb.length
-        const createIndices = (parentBoxMeta && parentBoxMeta.randomSingle) ? [selectedIndex] : [...Array(mb.length).keys()];
-        const nestedRadius = 45;
-        const nestedAngleStep = createIndices.length>1 ? (2*Math.PI)/createIndices.length : 0;
+
+        const createIndices = (parentMeta && parentMeta.randomSingle) ? [selectedIndex] : [...Array(mb.length).keys()];
+        const nestedRadius = 60;
+        const nestedAngleStep = createIndices.length > 1 ? (2*Math.PI)/createIndices.length : 0;
+
         createIndices.forEach((idx, j) => {
           const mm = document.createElement('div');
           mm.className = 'mini-minibox';
           mm.textContent = (idx+1);
           const nangle = j*nestedAngleStep - Math.PI/2;
-          mm.style.left = `${parseInt(mini.style.left) + nestedRadius*Math.cos(nangle)}px`;
-          mm.style.top = `${parseInt(mini.style.top) + nestedRadius*Math.sin(nangle)}px`;
-          // store the URL to open
-          mm.dataset.url = mb[idx];
+          mm.style.left = `${Math.round(parseInt(mini.style.left) + nestedRadius*Math.cos(nangle))}px`;
+          mm.style.top = `${Math.round(parseInt(mini.style.top) + nestedRadius*Math.sin(nangle))}px`;
+          mm.dataset.url = Array.isArray(mb) ? mb[idx] : '';
           mm.dataset.box = n;
           mm.dataset.miniIndex = i;
           mm.dataset.miniMiniIndex = idx;
           mm.addEventListener('click', onMiniMiniClick);
           cont.appendChild(mm);
         });
+
       } else if(typeof mb === 'string'){
-        // mini-box itself is a link (Box5 & Box6 cases)
-        mini.dataset.url = mb; // already converted to preview if drive
+        // mini-box is link (Box5 & Box6)
+        mini.dataset.url = mb;
         mini.dataset.box = n;
         mini.dataset.miniIndex = i;
         mini.addEventListener('click', (e) => {
           e.stopPropagation();
-          // special handling for Box5: show random code with link
           const bdata = boxesData[n];
           if(bdata && bdata.codeSingleRandom && bdata.codes){
-            // choose a code once per mini (store in dataset)
-            if(!mini.dataset.chosenCode){
-              const cidx = Math.floor(Math.random()*bdata.codes.length);
-              mini.dataset.chosenCode = bdata.codes[cidx];
+            const storageKey = persistKey(n, i, 'chosenCode');
+            let chosen = localStorage.getItem(storageKey);
+            if(!chosen){
+              const cidx = Math.floor(Math.random() * bdata.codes.length);
+              chosen = bdata.codes[cidx];
+              localStorage.setItem(storageKey, chosen);
             }
-            openViewer({
-              title: `Box ${n} - Código de acceso`,
-              url: mini.dataset.url,
-              code: mini.dataset.chosenCode,
-              box: n
-            });
+            openViewer({title:`Box ${n} - Código de acceso`, url: mini.dataset.url, code: chosen, box: n});
           } else {
             openViewer({title:`Box ${n}`, url: mini.dataset.url, box: n});
           }
         });
       }
 
-      // main box click shows instructions
       main.addEventListener('click', () => {
         openInstructions(n);
       });
@@ -328,25 +455,29 @@ function createBoxes(){
   }
 }
 
-/* ============================
+/* ---------------------------
    Event handlers
-   ============================ */
-
+   --------------------------- */
 function onMiniMiniClick(e){
   e.stopPropagation();
-  const target = e.currentTarget;
-  const url = target.dataset.url;
-  const box = target.dataset.box;
-  const miniIndex = target.dataset.miniIndex;
-  const miniMiniIndex = target.dataset.miniMiniIndex;
+  const t = e.currentTarget;
+  let url = t.dataset.url;
+  const box = t.dataset.box;
+  const miniIndex = t.dataset.miniIndex;
+  const miniMiniIndex = t.dataset.miniMiniIndex;
 
-  // handle randomSingle: if parent specified randomSingle but we didn't precompute, ensure we pick one
+  // fallback if randomSingle not precomputed (shouldn't happen due to persistence)
   const parent = boxesData[box];
-  if(parent && parent.randomSingle && !target.dataset.url){
-    // fallback: choose random now
+  if(parent && parent.randomSingle && (!url || url === 'undefined')){
     const mb = parent.miniBoxes[miniIndex];
-    const idx = Math.floor(Math.random()*mb.length);
-    target.dataset.url = mb[idx];
+    const storageKey = persistKey(box, miniIndex, 'selectedIndex');
+    let sel = localStorage.getItem(storageKey);
+    if(sel === null){
+      sel = Math.floor(Math.random()*mb.length);
+      localStorage.setItem(storageKey, String(sel));
+    }
+    url = mb[parseInt(sel,10)];
+    t.dataset.url = url;
   }
 
   openViewer({
@@ -356,71 +487,77 @@ function onMiniMiniClick(e){
   });
 }
 
-/* Opens the viewer modal with the content (iframe for drive preview; direct image fallback if link ends with image ext) */
+/* ---------------------------
+   Viewer logic (iframe for Drive preview; image fallback)
+   --------------------------- */
 function openViewer({title='Contenido', url, code=null, box=null}){
   viewerTitle.textContent = title;
   viewerFooter.textContent = code ? `Código revelado: ${code}` : `Box ${box || ''}`;
   viewerOpenNew.style.display = 'none';
   viewerOpenNew.href = '#';
-
-  // clean body
   viewerBody.innerHTML = '';
 
   if(!url){
-    // if no url provided, show an error
-    viewerBody.innerHTML = `<div style="color:var(--muted);padding:20px;text-align:center">Contenido no disponible</div>`;
+    viewerBody.innerHTML = `<div style="padding:28px;color:var(--muted);text-align:center">Contenido no disponible</div>`;
     modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
     return;
   }
 
-  // if it's a GitHub or normal web link (not Drive preview) we open in iframe but also provide "open in new tab" button
   const isDrive = url.includes('drive.google.com/file/d/');
-  const isHttp = url.startsWith('http');
   const imageExt = url.match(/\.(png|jpg|jpeg|gif|webp)(\?|$)/i);
   const pdfExt = url.match(/\.pdf(\?|$)/i);
 
-  // Viewer strategy:
-  // - Drive preview: embed in iframe
-  // - Direct image: show <img>
-  // - Otherwise embed in iframe and show "abrir en nueva pestaña" as fallback
-  if(imageExt && !isDrive){
-    const img = document.createElement('img'); img.src = url; img.alt = title;
-    viewerBody.appendChild(img);
-  } else {
+  // If Drive preview: embed in iframe (Drive viewer handles pdf/video/image)
+  if(isDrive || pdfExt || !imageExt){
     const iframe = document.createElement('iframe');
-    iframe.src = isDrive ? url : url;
+    iframe.src = url;
     iframe.allow = 'autoplay; encrypted-media; fullscreen';
     iframe.loading = 'lazy';
+    iframe.style.background = '#000';
     viewerBody.appendChild(iframe);
 
-    // show open in new tab so user can inspect if embed blocked
+    viewerOpenNew.style.display = 'inline-block';
+    viewerOpenNew.href = url;
+  } else if(imageExt){
+    // direct image
+    const img = document.createElement('img');
+    img.src = url;
+    img.alt = title;
+    viewerBody.appendChild(img);
+    // allow new tab (in case user wants to download manually)
+    viewerOpenNew.style.display = 'inline-block';
+    viewerOpenNew.href = url;
+  } else {
+    // fallback: iframe
+    const iframe = document.createElement('iframe');
+    iframe.src = url;
+    iframe.loading = 'lazy';
+    viewerBody.appendChild(iframe);
     viewerOpenNew.style.display = 'inline-block';
     viewerOpenNew.href = url;
   }
 
-  // show modal
-  modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
+  modal.classList.add('show');
+  modal.setAttribute('aria-hidden','false');
 }
 
-/* Close modal */
+/* Close handlers */
 closeBtn.addEventListener('click', () => {
-  modal.classList.remove('show'); modal.setAttribute('aria-hidden','true');
+  modal.classList.remove('show');
   viewerBody.innerHTML = '';
+  modal.setAttribute('aria-hidden','true');
 });
-
-/* Clicking outside viewer closes modal */
 modal.addEventListener('click', (ev) => {
-  if(ev.target === modal){ modal.classList.remove('show'); viewerBody.innerHTML=''; modal.setAttribute('aria-hidden','true'); }
+  if(ev.target === modal){ modal.classList.remove('show'); viewerBody.innerHTML = ''; modal.setAttribute('aria-hidden','true'); }
 });
 
-/* Show instructions for a main box */
+/* Instructions display */
 function openInstructions(boxNumber){
   const txt = `Instructions for Mystery Box ${boxNumber}: To unlock the full effect of this box, make sure you’re in a completely dark room — the content only reveals itself when the lights are gone.`;
-  // Reuse viewer to show instructions quickly as HTML (no embed)
   viewerTitle.textContent = `Box ${boxNumber} — Instrucciones`;
   viewerFooter.textContent = '';
   viewerOpenNew.style.display = 'none';
-  viewerBody.innerHTML = `<div style="padding:24px;color:var(--muted);line-height:1.4">${txt}</div>`;
+  viewerBody.innerHTML = `<div style="padding:28px;color:var(--muted);line-height:1.6">${txt}</div>`;
   modal.classList.add('show'); modal.setAttribute('aria-hidden','false');
 }
 
