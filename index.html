@@ -166,73 +166,76 @@
 </div>
 
 <script>
-const boxConfig = {
-  1: [9, 9, 8],        // Box 1 → mantiene mini-miniboxes
-  2: Array(9).fill(0), // Box 2 → 9 mini-boxes
-  3: [0],              // Box 3 → 1 mini-box
-  4: [0],              // Box 4 → 1 mini-box
-  5: [0],              // Box 5 → 1 mini-box
-  6: Array(2).fill(0)  // Box 6 → 2 mini-boxes
-};
-
 const boxes = document.querySelectorAll('.box-container');
 const modal = document.getElementById('modal');
 const modalText = document.getElementById('modal-text');
 const closeBtn = document.querySelector('.close-btn');
 
-function openModal(message) {
-  modalText.innerHTML = message;
+// Lista de archivos de Box 1 mini-miniboxes
+const miniMiniLinksBox1 = [
+  { type: 'video', url: 'VIDEO_LINK_AQUI' }, // intro_teaser
+  { type: 'pdf', url: 'https://docs.google.com/viewer?embedded=true&url=https://raw.githubusercontent.com/luisfernando2025xt/PREMIUM-MYSTERY-BOX-2025/main/assets/box1/minibox1/02_CASE_SUMMARY.pdf' },
+  { type: 'pdf', url: 'https://docs.google.com/viewer?embedded=true&url=https://raw.githubusercontent.com/luisfernando2025xt/PREMIUM-MYSTERY-BOX-2025/main/assets/box1/minibox1/03_POLICE_REPORT.pdf' },
+  { type: 'pdf', url: 'https://docs.google.com/viewer?embedded=true&url=https://raw.githubusercontent.com/luisfernando2025xt/PREMIUM-MYSTERY-BOX-2025/main/assets/box1/minibox1/06_NIGHT_REPORT.pdf' },
+  { type: 'pdf', url: 'https://docs.google.com/viewer?embedded=true&url=https://raw.githubusercontent.com/luisfernando2025xt/PREMIUM-MYSTERY-BOX-2025/main/assets/box1/minibox1/Classified_note.pdf' },
+  { type: 'image', url: 'https://raw.githubusercontent.com/luisfernando2025xt/PREMIUM-MYSTERY-BOX-2025/main/assets/box1/minibox1/photo_1%20(1).png' },
+  { type: 'image', url: 'https://raw.githubusercontent.com/luisfernando2025xt/PREMIUM-MYSTERY-BOX-2025/main/assets/box1/minibox1/photo_2.png' },
+  { type: 'image', url: 'https://raw.githubusercontent.com/luisfernando2025xt/PREMIUM-MYSTERY-BOX-2025/main/assets/box1/minibox1/photo_3%20(1).png' },
+  { type: 'image', url: 'https://raw.githubusercontent.com/luisfernando2025xt/PREMIUM-MYSTERY-BOX-2025/main/assets/box1/minibox1/photo_4%20(1).png' }
+];
+
+// Función para generar contenido embebido según tipo
+function getEmbeddedContent(file) {
+  if(file.type === 'pdf') {
+    return `<iframe src="${file.url}" width="100%" height="500px"></iframe>`;
+  } else if(file.type === 'image') {
+    return `<img src="${file.url}" style="max-width:100%; max-height:500px;">`;
+  } else if(file.type === 'video') {
+    return `<video width="100%" controls><source src="${file.url}" type="video/mp4">Your browser does not support the video tag.</video>`;
+  } else {
+    return `<p>Cannot preview this file. <a href="${file.url}" target="_blank">Open directly</a></p>`;
+  }
+}
+
+function openModal(content) {
+  modalText.innerHTML = content;
   modal.style.display = 'block';
 }
 
 closeBtn.onclick = () => modal.style.display = 'none';
-window.onclick = (event) => { if(event.target == modal) modal.style.display = 'none'; }
+window.onclick = (e) => { if(e.target == modal) modal.style.display = 'none'; }
 
 boxes.forEach(container => {
   const mainBox = container.querySelector('.main-box');
-  const boxNumber = container.dataset.box;
-  const miniBoxes = boxConfig[boxNumber];
-  const radius = 80;
-  const angleStep = miniBoxes.length > 1 ? (2 * Math.PI) / miniBoxes.length : 0;
+  const boxNumber = parseInt(container.dataset.box);
 
-  miniBoxes.forEach((nestedCount, i) => {
-    const miniBox = document.createElement('div');
-    miniBox.className = 'mini-box';
-    miniBox.textContent = i + 1;
-    const angle = i * angleStep;
-    miniBox.style.left = `${radius * Math.cos(angle) + 55}px`;
-    miniBox.style.top = `${radius * Math.sin(angle) + 55}px`;
+  if(boxNumber === 1) {
+    // Box 1 → 9 mini-miniboxes
+    const radius = 80;
+    const nestedCount = miniMiniLinksBox1.length;
+    const angleStep = (2 * Math.PI) / nestedCount;
 
-    miniBox.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1}`);
-    });
+    for(let j=0; j<nestedCount; j++){
+      const miniMini = document.createElement('div');
+      miniMini.className = 'mini-minibox';
+      miniMini.textContent = j+1;
+      miniMini.style.left = `${radius * Math.cos(j*angleStep) + 55}px`;
+      miniMini.style.top = `${radius * Math.sin(j*angleStep) + 55}px`;
 
-    container.appendChild(miniBox);
+      miniMini.addEventListener('click', e => {
+        e.stopPropagation();
+        const content = `<h3>Mystery Box 1 - Mini-Minibox ${j+1}</h3>` + getEmbeddedContent(miniMiniLinksBox1[j]);
+        openModal(content);
+      });
 
-    // Nested mini-miniboxes only for Box 1
-    if (boxNumber == 1 && nestedCount > 0) {
-      const nestedAngleStep = (2 * Math.PI) / nestedCount;
-      const nestedRadius = 50;
-      for (let j = 0; j < nestedCount; j++) {
-        const miniMini = document.createElement('div');
-        miniMini.className = 'mini-minibox';
-        miniMini.textContent = j + 1;
-        miniMini.style.left = `${parseInt(miniBox.style.left) + nestedRadius * Math.cos(j * nestedAngleStep)}px`;
-        miniMini.style.top = `${parseInt(miniBox.style.top) + nestedRadius * Math.sin(j * nestedAngleStep)}px`;
-
-        miniMini.addEventListener('click', (e) => {
-          e.stopPropagation();
-          openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1} - Mini-Minibox ${j + 1}`);
-        });
-
-        container.appendChild(miniMini);
-      }
+      container.appendChild(miniMini);
     }
-  });
+  }
 
+  // Main box click
   mainBox.addEventListener('click', () => {
-    openModal(`Instructions for Mystery Box ${boxNumber}:<br>Click the mini-boxes to reveal surprises!<br>Follow the clues and enjoy your rewards!`);
+    openModal(`<h3>Instructions for Mystery Box ${boxNumber}</h3>
+               <p>Click the mini-boxes to reveal surprises! Follow the clues and enjoy your rewards!</p>`);
   });
 });
 </script>
