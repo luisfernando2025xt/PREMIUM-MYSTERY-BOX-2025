@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mystery Box 2025</title>
+<style>
+  body {
+    background-color: #111;
+    color: #fff;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  h1 { margin-bottom: 40px; }
+
+  /* Estilo para las instrucciones */
+  .instructions {
+    background-color: #222;
+    color: #f1f1f1;
+    padding: 20px;
+    border-radius: 10px;
+    margin-bottom: 50px;
+    text-align: center;
+    width: 80%;
+    max-width: 800px;
+    font-size: 18px;
+  }
+
+  .main-boxes {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 50px;
+  }
+  .box-container {
+    position: relative;
+    width: 150px;
+    height: 150px;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  .main-box {
+    width: 100%;
+    height: 100%;
+    background-color: #444;
+    border: 3px solid gold;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 16px;
+    position: relative;
+  }
+
+  .mini-box {
+    width: 40px;
+    height: 40px;
+    background-color: #666;
+    border: 2px solid silver;
+    border-radius: 5px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    cursor: pointer;
+    transition: transform 0.2s;
+  }
+
+  .mini-box:hover {
+    transform: scale(1.2);
+    background-color: gold;
+    color: black;
+  }
+  
+</style>
+</head>
+<body>
+
+<h1>Mystery Box 2025</h1>
+
+<!-- Instrucciones -->
+<div class="instructions">
+  <h2>Instrucciones</h2>
+  <p>Haz clic en las cajas principales para ver las instrucciones de cada una. Luego, interactúa con las mini cajas alrededor para descubrir lo que esconden. ¡Que empiece la diversión!</p>
+</div>
+
+<!-- Contenedor de las 6 cajas principales -->
+<div class="main-boxes">
+  <!-- Caja 1 -->
+  <div class="box-container" data-box="1">
+    <div class="main-box">Box 1</div>
+  </div>
+  <!-- Caja 2 -->
+  <div class="box-container" data-box="2">
+    <div class="main-box">Box 2</div>
+  </div>
+  <!-- Caja 3 -->
+  <div class="box-container" data-box="3">
+    <div class="main-box">Box 3</div>
+  </div>
+  <!-- Caja 4 -->
+  <div class="box-container" data-box="4">
+    <div class="main-box">Box 4</div>
+  </div>
+  <!-- Caja 5 -->
+  <div class="box-container" data-box="5">
+    <div class="main-box">Box 5</div>
+  </div>
+  <!-- Caja 6 -->
+  <div class="box-container" data-box="6">
+    <div class="main-box">Box 6</div>
+  </div>
+</div>
+
+<script>
+// Para cada caja principal, generamos 8 mini cajas alrededor
+const boxes = document.querySelectorAll('.box-container');
+
+boxes.forEach(container => {
+  const mainBox = container.querySelector('.main-box');
+  const boxNumber = container.dataset.box;
+
+  // Crear las mini cajas
+  for (let i = 0; i < 8; i++) {
+    const miniBox = document.createElement('div');
+    miniBox.className = 'mini-box';
+    miniBox.textContent = i + 1;
+
+    // Posición alrededor del círculo
+    const angle = (i / 8) * (2 * Math.PI);
+    const radius = 80; // distancia desde el centro
+    miniBox.style.left = `${radius * Math.cos(angle) + 55}px`; // 55 para centrar
+    miniBox.style.top = `${radius * Math.sin(angle) + 55}px`;
+
+    miniBox.addEventListener('click', () => {
+      alert(`Mystery Box ${boxNumber} - Mini Box ${i + 1}`);
+    });
+
+    container.appendChild(miniBox);
+  }
+
+  // Instrucciones al hacer click en la caja principal
+  mainBox.addEventListener('click', () => {
+    alert(`Instrucciones para la Caja Misteriosa ${boxNumber}:\n1. Haz clic en las mini cajas para descubrir el contenido.\n2. Sigue las pistas para recibir tus premios.\n¡Disfruta de la experiencia!`);
+  });
+});
+</script>
+
+</body>
+</html>
