@@ -16,7 +16,6 @@
 
   h1 { margin-bottom: 30px; font-size: 36px; color: gold; text-shadow: 0 0 5px #fff; }
 
-  /* Instructions box */
   .instructions {
     background-color: #222;
     color: #f1f1f1;
@@ -95,7 +94,6 @@
     box-shadow: 0 0 15px gold;
   }
 
-  /* Modal styles */
   .modal {
     display: none;
     position: fixed;
@@ -157,7 +155,6 @@
   <div class="box-container" data-box="6"><div class="main-box">Box 6</div></div>
 </div>
 
-<!-- Modal structure -->
 <div id="modal" class="modal">
   <div class="modal-content">
     <span class="close-btn">&times;</span>
@@ -166,13 +163,26 @@
 </div>
 
 <script>
+// Archivos de Box 1, en el orden correcto de revelado
+const box1Files = [
+  'assets/block1/minibox1/intro_teaser%20(3).mp4',
+  'assets/block1/minibox1/02_CASE_SUMMARY.pdf',
+  'assets/block1/minibox1/03_POLICE_REPORT.pdf',
+  'assets/block1/minibox1/photo_1%20(1).png',
+  'assets/block1/minibox1/photo_2.png',
+  'assets/block1/minibox1/photo_3%20(1).png',
+  'assets/block1/minibox1/photo_4%20(1).png',
+  'assets/block1/minibox1/Classified_note.pdf',
+  'assets/block1/minibox1/06_NIGHT_REPORT.pdf'
+];
+
 const boxConfig = {
-  1: [9, 9, 8],        // Box 1 → mantiene mini-miniboxes
-  2: Array(9).fill(0), // Box 2 → 9 mini-boxes
-  3: [0],              // Box 3 → 1 mini-box
-  4: [0],              // Box 4 → 1 mini-box
-  5: [0],              // Box 5 → 1 mini-box
-  6: Array(2).fill(0)  // Box 6 → 2 mini-boxes
+  1: Array(9).fill(9), // 9 mini-miniboxes
+  2: Array(9).fill(0),
+  3: [0],
+  4: [0],
+  5: [0],
+  6: Array(2).fill(0)
 };
 
 const boxes = document.querySelectorAll('.box-container');
@@ -203,14 +213,9 @@ boxes.forEach(container => {
     miniBox.style.left = `${radius * Math.cos(angle) + 55}px`;
     miniBox.style.top = `${radius * Math.sin(angle) + 55}px`;
 
-    miniBox.addEventListener('click', (e) => {
-      e.stopPropagation();
-      openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1}`);
-    });
-
     container.appendChild(miniBox);
 
-    // Nested mini-miniboxes only for Box 1
+    // Mini-miniboxes para Box 1
     if (boxNumber == 1 && nestedCount > 0) {
       const nestedAngleStep = (2 * Math.PI) / nestedCount;
       const nestedRadius = 50;
@@ -223,12 +228,19 @@ boxes.forEach(container => {
 
         miniMini.addEventListener('click', (e) => {
           e.stopPropagation();
-          openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1} - Mini-Minibox ${j + 1}`);
+          const filePath = box1Files[j]; // archivo correcto
+          window.open(filePath, '_blank');
         });
 
         container.appendChild(miniMini);
       }
     }
+
+    // Para mini-boxes sin mini-miniboxes (otros boxes)
+    miniBox.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if(boxNumber != 1) openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1}`);
+    });
   });
 
   mainBox.addEventListener('click', () => {
