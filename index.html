@@ -168,13 +168,74 @@
 
 <script>
 const boxConfig = {
-  1: [9, 9, 8],
-  2: [9],
-  3: [5],
-  4: [1],
-  5: [1],
-  6: [2]
+  1: [9, 9, 8],    // Keep Box 1 as is
+  2: Array(9).fill(0), // Box 2 → 9 mini-boxes, no nested mini-miniboxes
+  3: [0],           // Box 3 → 1 mini-box
+  4: [0],           // Box 4 → 1 mini-box
+  5: [0],           // Box 5 → 1 mini-box
+  6: Array(2).fill(0) // Box 6 → 2 mini-boxes
 };
+
+const boxes = document.querySelectorAll('.box-container');
+const modal = document.getElementById('modal');
+const modalText = document.getElementById('modal-text');
+const closeBtn = document.querySelector('.close-btn');
+
+function openModal(message) {
+  modalText.innerHTML = message;
+  modal.style.display = 'block';
+}
+
+closeBtn.onclick = () => modal.style.display = 'none';
+window.onclick = (event) => { if(event.target == modal) modal.style.display = 'none'; }
+
+boxes.forEach(container => {
+  const mainBox = container.querySelector('.main-box');
+  const boxNumber = container.dataset.box;
+  const miniBoxes = boxConfig[boxNumber];
+  const radius = 80;
+  const angleStep = miniBoxes.length > 1 ? (2 * Math.PI) / miniBoxes.length : 0;
+
+  miniBoxes.forEach((nestedCount, i) => {
+    const miniBox = document.createElement('div');
+    miniBox.className = 'mini-box';
+    miniBox.textContent = i + 1;
+    const angle = i * angleStep;
+    miniBox.style.left = `${radius * Math.cos(angle) + 55}px`;
+    miniBox.style.top = `${radius * Math.sin(angle) + 55}px`;
+
+    miniBox.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1}`);
+    });
+
+    container.appendChild(miniBox);
+
+    // Nested mini-miniboxes only for Box 1
+    if (boxNumber == 1 && nestedCount > 0) {
+      const nestedAngleStep = (2 * Math.PI) / nestedCount;
+      const nestedRadius = 50;
+      for (let j = 0; j < nestedCount; j++) {
+        const miniMini = document.createElement('div');
+        miniMini.className = 'mini-minibox';
+        miniMini.textContent = j + 1;
+        miniMini.style.left = `${parseInt(miniBox.style.left) + nestedRadius * Math.cos(j * nestedAngleStep)}px`;
+        miniMini.style.top = `${parseInt(miniBox.style.top) + nestedRadius * Math.sin(j * nestedAngleStep)}px`;
+
+        miniMini.addEventListener('click', (e) => {
+          e.stopPropagation();
+          openModal(`Mystery Box ${boxNumber} - Mini Box ${i + 1} - Mini-Minibox ${j + 1}`);
+        });
+
+        container.appendChild(miniMini);
+      }
+    }
+  });
+
+  mainBox.addEventListener('click', () => {
+    openModal(`Instructions for Mystery Box ${boxNumber}:<br>Click the mini-boxes to reveal surprises!<br>Follow the clues and enjoy your rewards!`);
+  });
+});
 
 const boxes = document.querySelectorAll('.box-container');
 const modal = document.getElementById('modal');
