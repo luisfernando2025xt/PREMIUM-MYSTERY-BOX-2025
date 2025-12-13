@@ -508,17 +508,23 @@ function openViewer({title='Contenido', url, code=null, box=null}){
   const pdfExt = url.match(/\.pdf(\?|$)/i);
 
   // If Drive preview: embed in iframe (Drive viewer handles pdf/video/image)
-  if(isDrive || pdfExt || !imageExt){
+if(isDrive || pdfExt || !imageExt){
     const iframe = document.createElement('iframe');
     iframe.src = url;
     iframe.allow = 'autoplay; encrypted-media; fullscreen';
     iframe.loading = 'lazy';
     iframe.style.background = '#000';
+
+    // brighten PDF for better readability
+    if(pdfExt){
+        iframe.style.filter = 'brightness(1.4) contrast(1.1)';
+    }
+
     viewerBody.appendChild(iframe);
 
     viewerOpenNew.style.display = 'inline-block';
     viewerOpenNew.href = url;
-  } else if(imageExt){
+} else if(imageExt){
     // direct image
     const img = document.createElement('img');
     img.src = url;
@@ -527,7 +533,7 @@ function openViewer({title='Contenido', url, code=null, box=null}){
     // allow new tab (in case user wants to download manually)
     viewerOpenNew.style.display = 'inline-block';
     viewerOpenNew.href = url;
-  } else {
+} else {
     // fallback: iframe
     const iframe = document.createElement('iframe');
     iframe.src = url;
@@ -535,7 +541,7 @@ function openViewer({title='Contenido', url, code=null, box=null}){
     viewerBody.appendChild(iframe);
     viewerOpenNew.style.display = 'inline-block';
     viewerOpenNew.href = url;
-  }
+}
 
   modal.classList.add('show');
   modal.setAttribute('aria-hidden','false');
