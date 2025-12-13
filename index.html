@@ -213,6 +213,10 @@
     </div>
   </div>
 
+<!-- PDF.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.106/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.10.106/pdf.worker.min.js"></script>
+  
 <script>
 /* ---------------------------
    Helper: normalize Drive to preview
@@ -516,23 +520,38 @@ if(isDrive || pdfExt || !imageExt){
     iframe.style.background = '#000';
 
     // brighten PDF for better readability
-    if(pdfExt){
-        iframe.style.filter = 'brightness(1.5) contrast(1.1)';
+if(pdfExt || isDrive){
+  // Clear viewer body
+  viewerBody.innerHTML = '';
+  viewerOpenNew.style.display = 'inline-block';
+  viewerOpenNew.href = url;
+
+  // Cargar PDF
+  pdfjsLib.getDocument(url).promise.then(pdf => {
+    for(let pageNum = 1; pageNum <= pdf.numPages; pageNum++){
+      pdf.getPage(pageNum).then(page => {
+        const viewport = page.getViewport({scale: 1.5});
+        const canvas = document.createElement('canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = viewport.width;
+        canvas.height = viewport.height;
+
+        const renderCtx = { canvasContext: ctx, viewport: viewport };
+        page.render(renderCtx).promise.then(() => {
+          // Ahora dibujar contorno dorado sobre cada letra simulando glow
+          ctx.globalCompositeOperation = 'source-over';
+          ctx.strokeStyle = '#FFD700'; // dorado
+          ctx.lineWidth = 2;
+          // Ejemplo: recorrer posiciones de texto (solo para demo)
+          ctx.strokeText("✨", 50, 50); // <--- Aquí puedes aplicar efecto real
+        });
+
+        viewerBody.appendChild(canvas);
+      });
     }
-
-    viewerBody.appendChild(iframe);
-
-    viewerOpenNew.style.display = 'inline-block';
-    viewerOpenNew.href = url;
-} else if(imageExt){
-    // direct image
-    const img = document.createElement('img');
-    img.src = url;
-    img.alt = title;
-    viewerBody.appendChild(img);
-    // allow new tab (in case user wants to download manually)
-    viewerOpenNew.style.display = 'inline-block';
-    viewerOpenNew.href = url;
+  }).catch(err => {
+    viewerBody.innerHTML = `<div style="padding:28px;color:var(--muted);text-align:center">No se pudo cargar el PDF</div>`;
+  });
 } else {
     // fallback: iframe
     const iframe = document.createElement('iframe');
